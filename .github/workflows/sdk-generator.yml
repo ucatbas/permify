@@ -19,7 +19,7 @@ jobs:
 
         strategy:
             matrix:
-                language: [python, javascript]
+                language: [python]
 
         steps:
             - name: Harden Runner
@@ -35,16 +35,16 @@ jobs:
               with:
                   generator: ${{ matrix.language }}
                   openapi-file: ${SWAGGER_PATH}
-                  command-args: -o permify-client --git-user-id ${ORG_NAME} --git-repo-id permify-${{ matrix.language }} --api-package permify --package-name permify
+                  command-args: -o permify-client --git-user-id ucatbas --git-repo-id permify-${{ matrix.language }} --api-package permify --package-name permify
 
             - name: Push SDK to GitHub
               run: |
                   git config --global user.name 'GitHub Actions Bot'
                   git config --global user.email '<>'
-                  git clone https://${GITHUB_TOKEN}@github.com/${ORG_NAME}/permify-${{ matrix.language }}.git temp
+                  git clone https://${GITHUB_TOKEN}@github.com/ucatbas/permify-${{ matrix.language }}.git temp
                   cp -r permify-client/* temp/
                   cd temp
                   git add .
                   git diff-index --quiet HEAD || git commit -m "Update ${{ matrix.language }} SDK from OpenAPI changes"
-                  git push https://${GITHUB_TOKEN}@github.com/${ORG_NAME}/permify-${{ matrix.language }}.git main --force
+                  git push https://${GITHUB_TOKEN}@github.com/ucatbas/permify-${{ matrix.language }}.git main --force
                   rm -rf permify-client
